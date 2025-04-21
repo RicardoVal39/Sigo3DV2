@@ -1,0 +1,583 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Explora UnillanGO, el sistema de información geoespacial de la Universidad de los Llanos que te ayuda a navegar por el campus, encontrar paradas de bus y mucho más."
+    />
+    <meta
+      name="keywords"
+      content="Unillanos, mapa interactivo, campus, universidad, geolocalización, rutas, paradas de bus, estudiantes, docentes, programas, ubicacion, gestion de recursos"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta
+      property="og:title"
+      content="UnillanGO - Mapa Interactivo de la Universidad de los Llanos"
+    />
+    <meta
+      property="og:description"
+      content="Encuentra tu camino en el campus con UnillanGO. Explora rutas, paradas de bus y más con nuestro sistema geoespacial."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="UnillanGO - Mapa Interactivo de la Universidad de los Llanos"
+    />
+    <meta
+      name="twitter:description"
+      content="Accede a información geoespacial del campus, rutas y paradas de bus con UnillanGO."
+    />
+    <!-- <meta name="twitter:image" content="URL_de_la_imagen_destacada"> -->
+    <title>{% block title %}UnillanGO{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css"
+    />
+    <style>
+        :root {
+            --success-color: {{configurate_interface.success_color}};
+            --error-color: {{configurate_interface.error_color}};
+            --warning-color: {{configurate_interface.warning_color}};
+            --info-color: {{configurate_interface.info_color}};
+
+            --primary-color: {{configurate_interface.primary_color}};
+            --second-color: {{configurate_interface.secondary_color}};
+            --third-color: {{configurate_interface.third_color}};
+            --third-color-transparent: {{configurate_interface.third_color}}70;
+            --transition: 1500ms;
+            
+            --font-primary: '{{configurate_interface.font_primary}}', sans-serif;
+            --font-secondary: '{{configurate_interface.font_secondary}}', sans-serif;
+            --font-third: 'Bebas Neue', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body class="bg-sigo" data-sandcastle-bucket="bucket-requirejs.html">
+    <header class="sidebar">
+      <div class="nav-item-logo">
+        <img
+          src="{% static 'logos/Unillanos-white.png' %}"
+          alt="logo-objetos"
+        />
+      </div>
+      <div class="nav-item" onclick="consultaDatos('objetos_czml',this)">
+        <img src="{% static 'logos/objeto.png' %}" alt="logo-objetos" />
+        Objetos
+      </div>
+      <div class="nav-item" onclick="consultaDatos('nodos',this)">
+        <img src="{% static 'logos/nodo.png' %}" alt="logo-nodos" />
+        Nodos
+      </div>
+      <div class="nav-item" onclick="consultaDatos('caminos',this)">
+        <svg
+          id="eiTD9jqv1Sk1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 300 300"
+          shape-rendering="geometricPrecision"
+          text-rendering="geometricPrecision"
+          project-id="c729d44f1dd04b088ba0f0816f3cdacf"
+          export-id="53178a4406e548dba45015dfead6721c"
+          cached="false"
+        >
+          <g transform="translate(-.000007-.352943)">
+            <line
+              x1="-51.17647"
+              y1="51.17647"
+              x2="51.176469"
+              y2="-51.176471"
+              transform="matrix(1.091854-.015704 0.016133 1.121635 150.000001 150.000001)"
+              fill="none"
+              stroke="#dfdfdf"
+              stroke-width="6"
+            />
+            <ellipse
+              rx="34.941177"
+              ry="34.941177"
+              transform="translate(231.882354 66)"
+              fill="none"
+              stroke="#a90000"
+              stroke-width="8"
+            />
+            <ellipse
+              rx="34.941177"
+              ry="34.941177"
+              transform="translate(68.117649 234.705883)"
+              fill="none"
+              stroke="#a90000"
+              stroke-width="8"
+            />
+          </g>
+        </svg>
+        Caminos
+      </div>
+      <div class="nav-item" onclick="consultaDatos('rutas',this)">
+        <img src="{% static 'logos/ruta.png' %}" alt="logo-rutas" />
+        Rutas
+      </div>
+      <div
+        class="nav-item"
+        id="configuration"
+        onclick="mostrar('configuration_card',this)"
+      >
+        <img
+          src="{% static 'logos/configuracion.png' %}"
+          alt="logo-configuracion"
+        />
+        Configuración
+      </div>
+    </header>
+    <main>
+      <div id="modalInfo" class="modal">
+        <div class="modal-content">
+          <h2 id="modalTitle">Información</h2>
+          <div id="modalBody"></div>
+        </div>
+      </div>
+      <div id="cesium_admin"></div>
+      <div id="tools_container">
+        <div id="form_basic"></div>
+        <div id="search_results"></div>
+        <div id="info_object"></div>
+      </div>
+      <div class="card d-none" id="configuration_card">
+        <span class="card-title">Configuración</span>
+        <div class="card-content">
+          <div class="card-section">
+            <span class="card-section-title">Plano de Corte</span>
+            <div class="card-section-content">
+              <div class="option">
+                <span>Nodos</span>
+                <div
+                  id="cb_corte"
+                  class="checkbox off"
+                  onclick="filtrarCzml(this)"
+                ></div>
+              </div>
+              <div class="option">
+                <span>Altura Corte</span>
+                <input
+                  type="number"
+                  id="alturaCorte"
+                  placeholder="Altura de Corte"
+                  class="input-numeric"
+                  value="1"
+                  step="0.5"
+                  min="0"
+                  max="100"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="card-section">
+            <span class="card-section-title">Unidades</span>
+            <div class="card-section-content">
+              <div class="option">
+                <span>Dirección</span>
+                <input
+                  type="number"
+                  id="direccion"
+                  placeholder="Dirección"
+                  class="input-numeric"
+                  value="1"
+                  step="0.2"
+                  min="0.2"
+                  max="10"
+                />
+              </div>
+              <div class="option">
+                <span>Altura</span>
+                <input
+                  type="number"
+                  id="altura"
+                  placeholder="Altura"
+                  class="input-numeric"
+                  value="0.5"
+                  step="0.1"
+                  min="0"
+                  max="10"
+                />
+              </div>
+              <div class="option">
+                <span>Animación</span>
+                <input
+                  type="number"
+                  id="animacion"
+                  placeholder="Animación"
+                  class="input-numeric"
+                  value="1"
+                  step="0.5"
+                  min="-5"
+                  max="5"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="card-section">
+            <span class="card-section-title">Capas</span>
+            <div class="card-section-content">
+              <div class="option">
+                <span>Nodos</span>
+                <div
+                  id="cb_nodos"
+                  class="checkbox on"
+                  onclick="filtrarCzml(this)"
+                ></div>
+              </div>
+              <div class="option">
+                <span>Objetos Czml</span>
+                <div
+                  id="cb_objetos"
+                  class="checkbox on"
+                  onclick="filtrarCzml(this)"
+                ></div>
+              </div>
+              <div class="option">
+                <span>Camino</span>
+                <div
+                  id="cb_caminos"
+                  class="checkbox on"
+                  onclick="filtrarCzml(this)"
+                ></div>
+              </div>
+            </div>
+          </div>
+          {%if categories_nodes%}
+          <div class="card-section">
+            <span class="card-section-title">Categorias</span>
+            <div class="card-section-content">
+              {% for category in categories_nodes %}
+              <div id="category-{{category.pk}}" class="option">
+                <div class="icon">
+                  <img
+                    src="{{category.icon.url}}"
+                    alt="category-{{category.name}}"
+                  />
+                </div>
+                <span>{{category.name}}</span>
+                <div
+                  id="c_{{category.name}}"
+                  class="checkbox on"
+                  onclick="filterMarkersByCategory(this,'{{category.pk}}')"
+                ></div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif%}
+        </div>
+      </div>
+    </main>
+    <!-- Complementos -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
+    <!-- Cesium -->
+    <script src="{% static 'Cesium/Build/Cesium/Cesium.js' %}"></script>
+    <script
+      type="text/javascript"
+      src="{% static 'Cesium/Apps/Sandcastle/Sandcastle-header.js' %}"
+    ></script>
+    <style>
+      @import url("{%static 'Cesium/Apps/Sandcastle/templates/bucket.css'%}");
+    </style>
+
+    <script>
+      //Inicializadores
+      let tileset;
+      let extras;
+      let markers = {};
+      let markers_edges = {};
+      let edgesC = {};
+
+      let context_act = "";
+      let clickMarkerTemp = null;
+      let models = [];
+      let nodes = [];
+      let nodos_camino = [];
+      let edges = [];
+      let categories = [];
+      let id_object = null;
+      let id_node_location = null;
+      $('#search_results').hide();
+      $('#info_object').hide();
+      let forms = {
+          'nodos': {
+              'Nombre': {
+                  'type': 'text',
+                  'label': 'Nombre del nodo',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,},
+              'Categoría': {
+                  'type': 'select',
+                  'label': 'Categoría del nodo',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,},
+              'Latitud': {
+                  'type': 'number',
+                  'label': 'Latitud del nodo',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Longitud': {
+                  'type': 'number',
+                  'label': 'Longitud del nodo',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Altitud': {
+                  'type': 'number',
+                  'label': 'Altitud del nodo',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+          },
+          'caminos': {
+              'Punto_Inicial': {
+                  'type': 'select',
+                  'label': 'Nodo inicial del camino',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Punto_Final': {
+                  'type': 'select',
+                  'label': 'Nodo final del camino',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Distancia': {
+                  'type': 'number',
+                  'label': 'Distancia del camino',
+                  'required': true,
+                  'only_read': true,
+              },
+          },
+          'objetos_czml': {
+              'Nombre': {
+                  'type': 'label',
+                  'label': 'Nombre del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Tipo': {
+                  'type': 'select',
+                  'label': 'Tipo de objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Latitud': {
+                  'type': 'number',
+                  'label': 'Latitud del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Longitud': {
+                  'type': 'number',
+                  'label': 'Longitud del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Altitud': {
+                  'type': 'number',
+                  'label': 'Altitud del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Heading': {
+                  'type': 'number',
+                  'label': 'Heading del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Pitch': {
+                  'type': 'number',
+                  'label': 'Pitch del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Roll': {
+                  'type': 'number',
+                  'label': 'Roll del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Scale': {
+                  'type': 'number',
+                  'label': 'Escala del objeto',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+          },
+          'categorias': {
+              'Nombre': {
+                  'type': 'label',
+                  'label': 'Nombre de la categoría',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Icono': {
+                  'type': 'file',
+                  'label': 'Icono de la categoría',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+              'Contexto': {
+                  'type': 'select',
+                  'label': 'Contexto de la categoría',
+                  'value': '',
+                  'value_prev': '',
+                  'required': true,
+              },
+          },
+          'rutas': {
+              'Actualizar_Rutas': {
+                  'type': 'button',
+                  'label': 'Actualizar rutas',
+              },
+              'Nodo_Inicial': {
+                  'type': 'select',
+                  'label': 'Nodo inicial de la ruta',
+                  'required': true,
+              },
+              'Nodo_Final': {
+                  'type': 'select',
+                  'label': 'Nodo final de la ruta',
+                  'required': true,
+              },
+              'Distancia': {
+                  'type': 'number',
+                  'label': 'Distancia de la ruta',
+                  'only_read': true,
+              },
+              'Iniciar_Ruta_Normal': {
+                  'type': 'button',
+                  'label': 'Ruta normal',
+              },
+              'Iniciar_Ruta_Dron': {
+                  'type': 'button',
+                  'label': 'Ruta Dron',
+              },
+          },
+      };
+      let urls = {
+          'nodos': '{% url "edit_nodes" %}',
+          'caminos': '{% url "edit_edges" %}',
+          'objetos_czml': '{% url "edit_czml_objects" %}',
+
+      }
+      {%for model in models %}
+          models.push({
+              'pk': {{model.pk}},
+              'id_object': '{{model.id_object}}',
+              'name': '{{model.name}}',
+              'type': '{{model.type_object}}',
+              'is_activated': '{{model.is_activated}}',
+              'location' : {
+                  'pk': {{model.location.pk|default:0}},
+                  'longitude': '{{model.location.longitude|floatformat:"9"|default:"0.0"}}',
+                  'latitude': '{{model.location.latitude|floatformat:"9"|default:"0.0"}}',
+                  'altitude': '{{model.location.altitude|floatformat:"9"|default:"0.0"}}',
+              },
+              'heading': '{{model.heading|floatformat:"9"|default:"0.0"}}',
+              'pitch': '{{model.pitch|floatformat:"9"|default:"0.0"}}',
+              'roll': '{{model.roll|floatformat:"9"|default:"0.0"}}',
+              'scale': '{{model.scale|floatformat:"9"|default:"0.0"}}',
+          });
+      {%endfor%}
+      {%for node in nodes %}
+          nodes.push({
+              'pk': {{node.pk}},
+              'name': '{{node.name}}',
+              'category': '{{node.category_node.name}}',
+              'category_pk': {{node.category_node.pk}},
+              'category_icon': '{{node.category_node.icon.url}}',
+              'longitude': '{{node.longitude|floatformat:"9"|default:"0.0"}}',
+              'latitude': '{{node.latitude|floatformat:"9"|default:"0.0"}}',
+              'altitude': '{{node.altitude|floatformat:"9"|default:"0.0"}}',
+          });
+      {%endfor%}
+      {%for edge in edges %}
+          edges.push({
+              'pk': {{edge.pk}},
+              'id_start_node': '{{edge.start_node.pk}}',
+              'id_end_node': '{{edge.end_node.pk}}',
+              'distance': '{{edge.distance}}',
+          });
+      {%endfor%}
+      {%for category in categories %}
+          categories.push({
+              'pk': {{category.pk}},
+              'name': '{{category.name}}',
+              'icon': {% if category.icon%}'{{category.icon.url}}'{% else %}''{% endif %},
+              'context': '{{category.context}}',
+              'count': 0,
+              'show': true,
+          });
+      {%endfor%}
+    </script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/Czml/cameraEvents.js' %}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/Czml/CzmlInitial.js' %}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/Czml/edgesEvents.js' %}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/Czml/nodesEvents.js' %}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/Czml/objectsEvents.js' %}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/Czml/routesEvents.js' %}"
+    ></script>
+    <script
+      type="text/javascript"
+      src="{% static 'js/Interfaz/ControlDOM.js' %}"
+    ></script>
+  </body>
+</html>
