@@ -34,7 +34,7 @@ docker-compose up --build
 ### 3. **Aplica las migraciones de Django**
 
 ```bash
-docker-compose exec django python Sigo3DV2/manage.py migrate
+docker-compose exec django python manage.py migrate
 ```
 ### 4. **Restaura la base de datos**
 
