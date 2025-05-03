@@ -25,25 +25,17 @@ class Interfaz(models.Model):
         is_activated (BooleanField): Estado de activación de la interfaz.
     """
 
-    name = models.CharField(
-        max_length=255, verbose_name="Nombre de la interfaz"
-    )
+    name = models.CharField(max_length=255, verbose_name="Nombre de la interfaz")
     logo = models.ImageField(
         upload_to="images_logo/", verbose_name="Logo", null=True, blank=True
     )
     name_institution = models.CharField(
         max_length=255, verbose_name="Nombre de la institución"
     )
-    
-    font_primary = models.CharField(
-        max_length=255, verbose_name="Fuente primaria"
-    )
-    font_secondary = models.CharField(
-        max_length=255, verbose_name="Fuente secundaria"
-    )
-    font_third = models.CharField(
-        max_length=255, verbose_name="Fuente terciaria"
-    )
+
+    font_primary = models.CharField(max_length=255, verbose_name="Fuente primaria")
+    font_secondary = models.CharField(max_length=255, verbose_name="Fuente secundaria")
+    font_third = models.CharField(max_length=255, verbose_name="Fuente terciaria")
 
     primary_color = ColorField(
         blank=True,
@@ -57,47 +49,45 @@ class Interfaz(models.Model):
         default="#FFFFFF",
         help_text="#FFFFFF",
         max_length=10,
-        verbose_name="Color secundario"
+        verbose_name="Color secundario",
     )
     third_color = ColorField(
         blank=True,
         default="#FFFFFF",
         help_text="#FFFFFF",
         max_length=10,
-        verbose_name="Color terciario"
+        verbose_name="Color terciario",
     )
     success_color = ColorField(
         blank=True,
         default="#FFFFFF",
         help_text="#FFFFFF",
         max_length=10,
-        verbose_name="Color de éxito"
+        verbose_name="Color de éxito",
     )
     error_color = ColorField(
         blank=True,
         default="#FFFFFF",
         help_text="#FFFFFF",
         max_length=10,
-        verbose_name="Color de error"
+        verbose_name="Color de error",
     )
     warning_color = ColorField(
         blank=True,
         default="#FFFFFF",
         help_text="#FFFFFF",
         max_length=10,
-        verbose_name="Color de advertencia"
+        verbose_name="Color de advertencia",
     )
     info_color = ColorField(
         blank=True,
         default="#FFFFFF",
         help_text="#FFFFFF",
         max_length=10,
-        verbose_name="Color de información"
+        verbose_name="Color de información",
     )
 
-    is_activated = models.BooleanField(
-        verbose_name="Activado", default=True
-    )
+    is_activated = models.BooleanField(verbose_name="Activado", default=True)
 
     class Meta:
         verbose_name = "Interfaz"
@@ -208,6 +198,7 @@ class Room(models.Model):
     )
     area = models.FloatField(verbose_name="Area", null=True, blank=True)
     floor = models.IntegerField(verbose_name="Piso", default=1)
+    orientation = models.FloatField(verbose_name="Orientación", default=0.0, help_text="Orientación del aula en grados (0-360), en la entrada principal de la universidad la orientaciones 120. ")  
     object_father = models.ForeignKey(
         CzmlObject,
         related_name="object_father",
@@ -243,7 +234,7 @@ class Room(models.Model):
         db_table = "rooms"
 
     def __str__(self):
-        return f"Room: {self.name}"  # Return the name of the room
+        return f"{self.name}"  # Return the name of the room
 
 
 class Faculty(models.Model):

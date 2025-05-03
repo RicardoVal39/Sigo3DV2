@@ -14,45 +14,47 @@
 
 */
 
-function info(title, html, type, context) {
-    let container = $('#modalInfo');
-    let keep = 'modal';
-    container.attr('class', keep);
-    container.addClass(type);
-    container.addClass(context);
-    $('#modalTitle').html(title);
-    $('#modalBody').html(html);
-    container.show();
-}
 
-function closeModal(){
+
+function closeModal() {
     $('#modalInfo').hide();
 }
 
-function consultaDatos(context,div){
+function consultaDatos(context, div) {
     $('.sidebar .nav-item').removeClass('active');
-    if(context_act === context){
+    if (context_act === context) {
         context_act = '';
         let container = document.getElementById('form_basic');
         container.innerHTML = '';
-    }else{
+        $('#info_object').hide();
+        $('#search_results').hide();
+
+    } else {
         viewer.dataSources.removeAll();
+        quitarDron();
+
         context_act = context;
         div.classList.add("active");
         generarFormulario(context);
+        $('#search_results').hide();
+        $('#info_object').hide();
         KeyboardControl(false);
         switch (context) {
-            case 'nodos':   
+            case 'nodos':
                 DetectarNodos();
+                info("Herramienta de creación de nodos", "Seleccione un nodo para editarlo o cree uno nuevo.", "info", 10000);
                 break;
             case 'objetos_czml':
                 DetectarObjetos();
+                info("Herramienta de creación de objetos", "Busque los edificios o aulas con el buscador e interactúe con los modelos 3D.", "info", 10000);
                 break;
             case 'caminos':
                 crearCaminos();
+                info("Herramienta de creación de caminos", "Seleccione un nodo inicial y luego uno final para crear un camino. Si desea eliminar un camino, selecciónelo y haga clic en 'Eliminar'.", "info", 10000);
                 break;
             case 'rutas':
                 eventosRuta();
+                info("Herramienta de creación de rutas", "Si ha realizado cambios en los caminos, haga clic en 'Generar rutas'. Luego seleccione un nodo inicial, uno final y el tipo de visualización.", "info", 10000);
                 break;
         }
     }
@@ -61,26 +63,25 @@ function consultaDatos(context,div){
     }
 
 }
-function mostrar(id,div){
-    $('#'+id).removeClass('d-none');
-    $('#'+id).removeClass('off');
+function mostrar(id, div) {
+    $('#' + id).removeClass('d-none');
+    $('#' + id).removeClass('off');
     div.classList.add("active");
     div.onclick = function () {
         ocultar(id, div);
     };
 }
-function ocultar(id,div){
-    $('#'+id).addClass('d-none');
-    $('#'+id).addClass('off');
+function ocultar(id, div) {
+    $('#' + id).addClass('d-none');
+    $('#' + id).addClass('off');
     div.classList.remove("active");
     div.onclick = function () {
         mostrar(id, div);
     };
-    console.log(div);
 }
 function generarFormulario(context) {
-    $('#search_results').hide();
     $('#info_object').hide();
+    $('#search_results').hide();
     KeyboardControl(false);
     id_object = null;
     id_node_location = null;
@@ -93,11 +94,10 @@ function generarFormulario(context) {
 
     let form = document.createElement('form');
     form.id = 'form_basic_obj';
-    form.classList.add('scroll_white');
+    form.classList.add('scroll-white');
     Object.keys(forms[context]).forEach(field => {
         let label = document.createElement('label');
-        console.log(field);
-        label.textContent = field;
+        label.textContent = forms[context][field].label;
         let input;
         switch (forms[context][field].type) {
             case 'select':
@@ -106,15 +106,15 @@ function generarFormulario(context) {
                 option.value = "";
                 option.textContent = "Seleccionar...";
                 input.appendChild(option);
+                console.log(field);
                 switch (field) {
-                    case 'Categoría':
-                    case 'Tipo':
+                    case 'Categoria':
+                    case 'Categoria_nodo':
                         Object.keys(categories).forEach(category => {
-                            console.log(categories[category].context,"===", context);
                             if (categories[category].context !== context) return;
                             let option = document.createElement('option');
                             option.value = categories[category].pk;
-                            option.textContent = categories[category].context +' - '+ categories[category].name;
+                            option.textContent = categories[category].name;
                             input.appendChild(option);
                         });
                         break;
@@ -128,7 +128,7 @@ function generarFormulario(context) {
                         Object.keys(nodes).forEach(node => {
                             let option = document.createElement('option');
                             option.value = nodes[node].pk;
-                            option.textContent = nodes[node].pk +" - "+ nodes[node].name;
+                            option.textContent = nodes[node].pk + " - " + nodes[node].name;
                             input.appendChild(option);
                         });
                         break;
@@ -142,13 +142,13 @@ function generarFormulario(context) {
                 input = document.createElement('input');
                 input.type = 'number';
                 break;
-            
+
             case 'button':
                 input = document.createElement('button');
                 input.type = 'button';
                 input.classList.add('btn_form');
-                input.classList.add('btn_save');
-                input.textContent = field;
+                input.classList.add(forms[context][field].class);
+                input.textContent = forms[context][field].label;
                 break;
             default:
                 input = document.createElement('input');
@@ -157,7 +157,7 @@ function generarFormulario(context) {
         }
 
         input.name = field;
-        input.id = "id_"+field;
+        input.id = "id_" + field;
 
         form.appendChild(label);
         form.appendChild(input);
@@ -180,12 +180,12 @@ function generarFormulario(context) {
     form.appendChild(button);
     form.appendChild(button_delete);
     container.appendChild(form);
-    if (context === 'nodos'|| context === 'objetos_czml'){
-        $('#id_Latitud')[0].step=parseFloat($('#direccion').val())/1000000;
-        $('#id_Longitud')[0].step=parseFloat($('#direccion').val())/1000000;
-        $('#id_Altitud')[0].step =parseFloat($('#altura').val());
+    if (context === 'nodos' || context === 'objetos_czml') {
+        $('#id_Latitud')[0].step = parseFloat($('#direccion').val()) / 1000000;
+        $('#id_Longitud')[0].step = parseFloat($('#direccion').val()) / 1000000;
+        $('#id_Altitud')[0].step = parseFloat($('#altura').val());
     }
-    if (context === 'objetos_czml'){
+    if (context === 'objetos_czml') {
         $('#id_Heading')[0].step = parseFloat($('#altura').val());
         $('#id_Pitch')[0].step = parseFloat($('#altura').val());
         $('#id_Roll')[0].step = parseFloat($('#altura').val());
@@ -201,6 +201,7 @@ function generarFormulario(context) {
     input.type = "text";
     input.placeholder = "Buscar...";
     input.classList.add('search_input');
+    let timeout = null;
     switch (context) {
         case 'nodos':
             search_title.textContent = 'Búsqueda de nodos';
@@ -209,37 +210,75 @@ function generarFormulario(context) {
             div = document.createElement('div');
             div.id = 'search_results_div';
             div.classList.add('search_results_div');
-            div.classList.add('scroll_black');
+            div.classList.add('scroll-black');
             search_container.appendChild(div);
-            $('#KeyWordSearch').off('input').on('input', function() {
+            $('#KeyWordSearch').off('input').on('input', function () {
+                clearTimeout(timeout);
                 let searchTerm = $(this).val().toLowerCase();
-                $('#search_results_div').empty(); 
-                if (searchTerm.length > 0) {
-                    Object.keys(nodes).forEach(node => {
-                        if (nodes[node].name.toLowerCase().includes(searchTerm)) {
-                            let resultItem = document.createElement('div');
-                            resultItem.textContent = nodes[node].name;
-                            resultItem.classList.add('search_result_item');
-                            resultItem.onclick = function () {
-                                id_object = nodes[node].pk;
-                                id_node_location = nodes[node].pk_location;
-                                // zoomToCoordinates(nodes[node].location.latitude, nodes[node].location.longitude,nodes[node].location.altitude);
-                                $('#id_Latitud').val(nodes[node].location.latitude);
-                                $('#id_Longitud').val(nodes[node].location.longitude);
-                                $('#id_Altitud').val(nodes[node].location.altitude);
-                                $('#id_Nombre').val(nodes[node].name);
-                                $('#id_Categoria').val(nodes[node].category.pk);
-                                $('#id_Tipo').val(nodes[node].type);
-                                $('#id_Heading').val(nodes[node].heading);
-                                $('#id_Pitch').val(nodes[node].pitch);
-                                $('#id_Roll').val(nodes[node].roll);
-                                $('#id_Scale').val(nodes[node].scale);
+                timeout = setTimeout(() => {
+                    $.ajax({
+                        url: urls[context],
+                        type: 'POST',
+                        headers: {
+                            'X-CSRFToken': getCSRFToken()
+                        },
+                        data: JSON.stringify({
+                            'function': 'search',
+                            'keyword': searchTerm
+                        }),
+                        success: function (response) {
+                            $('#search_results_div').empty();
+                            const nodes_category = {};
+                            response.nodes.forEach(node => {
+                                if (!nodes_category[node.category_node_name]) {
+                                    nodes_category[node.category_node_name] = [];
+                                }
+                                nodes_category[node.category_node_name].push(node);
+                            });
+                            console.log(nodes_category);
+                            let tabs = '<div class="floors-tabs scroll-black">';
+                            Object.keys(nodes_category).sort().forEach(category => {
+                                tabs += `<button class="floor-tab scroll-black" data-floor="${category}">${category}</button>`;
+                            });
+                            tabs += '</div>';
+                            let floorRoomsHTML = '<div id="nodes_by_category" class="scroll-black"></div>';
+                            let info_object = `
+                                            ${tabs}
+                                            ${floorRoomsHTML}
+                                        `;
+                            $('#search_results_div').append(info_object);
+                            const showRooms = (floor) => {
+                                const container = document.getElementById('nodes_by_category');
+                                const roomsHTML = nodes_category[floor].map(r => `
+                                                    <div class="search_result_item_node" id="room${r.pk}" onclick="consultarNodo(${r.pk}, ${r.longitud}, ${r.latitud}, ${r.altitud})">
+                                                        <h3>${r.name}</h3>
+                                                    </div>
+                                                `).join('');
+                                container.innerHTML = `${roomsHTML}`;
                             };
-                            div.appendChild(resultItem);
+                            $('#btn_return').off('click').on('click', function () {
+                                $('#info_object').hide();
+                                $('#search_results').show();
+                            });
+                            document.querySelectorAll('.floor-tab').forEach(button => {
+                                button.addEventListener('click', () => {
+                                    document.querySelectorAll('.floor-tab').forEach(btn => btn.classList.remove('active'));
+                                    button.classList.add('active');
+                                    showRooms(button.dataset.floor);
+                                });
+                            });
+                            const firstFloor = Object.keys(nodes_category).sort()[0];
+                            document.querySelector(`.floor-tab[data-floor="${firstFloor}"]`).classList.add('active');
+                            showRooms(firstFloor);
+                            $('#search_results').show();
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error en la petición:", status, error);
                         }
                     });
-                }
+                }, 150);
             });
+            $('#KeyWordSearch').trigger('input');
             break;
         case 'objetos_czml':
             search_title.textContent = 'Búsqueda de objetos';
@@ -248,12 +287,12 @@ function generarFormulario(context) {
             div = document.createElement('div');
             div.id = 'search_results_div';
             div.classList.add('search_results_div');
-            div.classList.add('scroll_black');
+            div.classList.add('scroll-black');
             search_container.appendChild(div);
-            let timeout = null;
+            timeout = null;
 
-            $('#KeyWordSearch').off('input').on('input', function() {
-                clearTimeout(timeout);  
+            $('#KeyWordSearch').off('input').on('input', function () {
+                clearTimeout(timeout);
                 let searchTerm = $(this).val().toLowerCase();
                 timeout = setTimeout(() => {
                     $.ajax({
@@ -261,15 +300,14 @@ function generarFormulario(context) {
                         type: 'POST',
                         headers: {
                             'X-CSRFToken': getCSRFToken()
-                        }, 
+                        },
                         data: JSON.stringify({
                             'function': 'search',
                             'keyword': searchTerm
                         }),
                         success: function (response) {
-
-                            console.log("Respuesta del servidor:", response.objects);
                             $('#search_results_div').empty();
+                            console.log(response.objects);
                             response.objects.forEach(item => {
                                 let resultHTML = `
                                 <div id="object${item.id}" class="search_result_item">
@@ -285,20 +323,14 @@ function generarFormulario(context) {
                                 </div>
                                 `;
                                 $('#search_results_div').append(resultHTML);
-                                $('#object'+item.id).off('click').on('click', function() {
-                                    // flyAround(item.latitud, item.longitud,item.altitud);
-                                    KeyboardControl(true,'objetos_czml');
-                                    $('#id_Nombre').val(item.name);
-                                    $('#id_Tipo').val(item.type_object);
-                                    $('#id_Heading').val(item.heading);
-                                    $('#id_Pitch').val(item.pitch);
-                                    $('#id_Roll').val(item.roll);
-                                    $('#id_Scale').val(item.scale);
-                                    $('#id_Latitud').val(item.latitud);
-                                    $('#id_Longitud').val(item.longitud);
-                                    $('#id_Altitud').val(item.altitud);
-                                    // zoomToCoordinates(parseFloat(item.latitud), parseFloat(item.longitud),parseFloat(item.altitud));
-                                    if (item.count_rooms > 0){
+                                $('#object' + item.id).off('click').on('click', function () {
+                                    viewer.scene.primitives._primitives.forEach(entity => {
+                                        console.log((entity.id_object === item.id) ? item.id : 0);
+                                        if (entity.id_object === item.id) {
+                                            selectObject(entity, false)
+                                        }
+                                    });
+                                    if (item.count_rooms > 0) {
                                         const floors = {};
                                         item.rooms.forEach(room => {
                                             if (!floors[room.floor]) {
@@ -311,7 +343,7 @@ function generarFormulario(context) {
                                             tabs += `<button class="floor-tab" data-floor="${floor}">PISO ${floor}</button>`;
                                         });
                                         tabs += '</div>';
-                                        let floorRoomsHTML = '<div id="rooms_by_floor"></div>';
+                                        let floorRoomsHTML = '<div id="rooms_by_floor" class="scroll-black"></div>';
                                         let info_object = `
                                             <div class="subtitle_object">
                                                 <p>${item.name}</p> <span>${item.id}</span>
@@ -322,7 +354,7 @@ function generarFormulario(context) {
                                             ${floorRoomsHTML}
                                             <button id="btn_return" class="btn_form btn_return">Volver</button>
                                         `;
-                                        
+
                                         let container = document.getElementById('info_object');
                                         container.innerHTML = '';
                                         $('#info_object').append(info_object);
@@ -330,10 +362,19 @@ function generarFormulario(context) {
                                         $('#info_object').show();
                                         const showRooms = (floor) => {
                                             const container = document.getElementById('rooms_by_floor');
-                                            const roomsHTML = floors[floor].map(r => `<p>${r.name} - ${r.type_room}</p>`).join('');
+                                            const roomsHTML = floors[floor].map(r => `
+                                                <div class="room-item" id="room${r.id}" onclick="zoomToCoordinatesRoom(${r.location.latitud}, ${r.location.longitud}, ${r.location.altitud}, ${r.orientation})">
+                                                    <img src="${r.url}" class="search_result_image">
+                                                    <div class="search_result_content">
+                                                        <h3>${r.name}</h3>
+                                                        <span><b>ID:</b> ${r.id}</span>
+                                                        <span><b>Tipo:</b> ${r.type_room}</span>
+                                                    </div>
+                                                </div>
+                                                `).join('');
                                             container.innerHTML = `${roomsHTML}`;
                                         };
-                                        $('#btn_return').off('click').on('click', function() {
+                                        $('#btn_return').off('click').on('click', function () {
                                             $('#info_object').hide();
                                             $('#search_results').show();
                                         });
@@ -356,7 +397,7 @@ function generarFormulario(context) {
                             console.error("Error en la petición:", status, error);
                         }
                     });
-                }, 150);  
+                }, 150);
             });
             $('#KeyWordSearch').trigger('input');
             break;
@@ -367,21 +408,22 @@ function generarFormulario(context) {
             div = document.createElement('div');
             div.id = 'search_results_div';
             div.classList.add('search_results_div');
-            div.classList.add('scroll_black');
+            div.classList.add('scroll-black');
             search_container.appendChild(div);
-            $('#KeyWordSearch').off('input').on('input', function() {
+            $('#KeyWordSearch').off('input').on('input', function () {
                 let searchTerm = $(this).val().toLowerCase();
-                $('#search_results_div').empty(); 
+                $('#search_results_div').empty();
                 if (searchTerm.length > 0) {
                     Object.keys(nodes).forEach(node => {
                         if (nodes[node].name.toLowerCase().includes(searchTerm)) {
                             let resultItem = document.createElement('div');
                             resultItem.textContent = nodes[node].name;
+
                             resultItem.classList.add('search_result_item');
                             resultItem.onclick = function () {
                                 id_object = nodes[node].pk;
                                 id_node_location = nodes[node].pk_location;
-                                // zoomToCoordinates(nodes[node].location.latitude, nodes[node].location.longitude,nodes[node].location.altitude);
+                                zoomToCoordinates(nodes[node].location.latitude, nodes[node].location.longitude, nodes[node].location.altitude);
                                 $('#id_Latitud').val(nodes[node].location.latitude);
                                 $('#id_Longitud').val(nodes[node].location.longitude);
                                 $('#id_Altitud').val(nodes[node].location.altitude);
@@ -406,18 +448,18 @@ function generarFormulario(context) {
             div = document.createElement('div');
             div.id = 'search_results_div';
             div.classList.add('search_results_div');
-            div.classList.add('scroll_black');
+            div.classList.add('scroll-black');
             search_container.appendChild(div);
-            $('#KeyWordSearch').off('input').on('input', function() {
+            $('#KeyWordSearch').off('input').on('input', function () {
                 let searchTerm = $(this).val().toLowerCase();
-                $('#search_results_div').empty(); 
+                $('#search_results_div').empty();
                 if (searchTerm.length > 0) {
-                    
+
                 }
             });
             break;
     }
-    
+
 }
 
 function getCSRFToken() {
@@ -433,96 +475,101 @@ function getCSRFToken() {
     return cookieValue;
 }
 function enviarForm(action) {
-        let form = document.getElementById('form_basic_obj');
-        let data = {};
-        let formData = new FormData(form);
-        for (let key of formData.keys()) {
-            data[key] = formData.get(key);
-        }
-        switch (action) {
-            case 'delete':
-                data['action'] = 'delete';
-                method_form = 'DELETE';
-                break;
-            case 'update':
-                data['action'] = 'update';
-                method_form = 'PUT';
-                break;
-            case 'post':
-                data['action'] = 'post';
-                method_form = 'POST';
-                break;
-            
-        }
-        if(id_node_location){
-            if (context_act === 'objetos_czml'){
-                data['pk'] = id_object;
-                data['pk_location'] = id_node_location;
-            }else if (context_act === 'nodos'){
-                data['pk'] = id_node_location;
-            }
-        }
-        data['function'] = 'save';
-        console.log(data);
-        $.ajax({
-            url: urls[context_act],
-            type: method_form,
-            headers: {
-                'X-CSRFToken': getCSRFToken()
-            }, 
-            data: JSON.stringify(data),
-            success: function (response) {
-                info("Respuesta del servidor", response.message, "success", context_act);
-                console.log("Respuesta del servidor:", response);
-            },
-            error: function (xhr, status, error) {
-                console.error("Error en la petición:", status, error);
-            }
-        });
-}
-function filtrarCzml(checkbox){
-    if (checkbox.classList.contains('on')){
-        checkbox.classList.replace('on','off');
-    }else{
-        checkbox.classList.replace('off','on');
+    let form = document.getElementById('form_basic_obj');
+    let data = {};
+    let formData = new FormData(form);
+    for (let key of formData.keys()) {
+        data[key] = formData.get(key);
     }
-    if ($('#cb_objetos').hasClass('on')){
+    switch (action) {
+        case 'delete':
+            data['action'] = 'delete';
+            method_form = 'DELETE';
+            break;
+        case 'update':
+            data['action'] = 'update';
+            method_form = 'PUT';
+            break;
+        case 'post':
+            data['action'] = 'post';
+            method_form = 'POST';
+            break;
+
+    }
+    if (id_node_location) {
+        if (context_act === 'objetos_czml') {
+            data['pk'] = id_object;
+            data['pk_location'] = id_node_location;
+        } else if (context_act === 'nodos') {
+            data['pk'] = id_node_location;
+        }
+    }
+    data['function'] = 'save';
+    console.log(data);
+    $.ajax({
+        url: urls[context_act],
+        type: method_form,
+        headers: {
+            'X-CSRFToken': getCSRFToken()
+        },
+        data: JSON.stringify(data),
+        success: function (response) {
+            info("Respuesta del servidor", response.message, "success", 10000);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error en la petición:", status, error);
+        }
+    });
+}
+function filtrarCzml(checkbox) {
+    if (checkbox) {
+        if (checkbox.classList.contains('on')) {
+            checkbox.classList.replace('on', 'off');
+        } else {
+            checkbox.classList.replace('off', 'on');
+        }
+    }
+    if ($('#cb_objetos').hasClass('on')) {
         objects = viewer.scene.primitives._primitives;
-        for (let objeto of objects){
-            if (objeto.tipo === 'Modelo'){
+        for (let objeto of objects) {
+            if (objeto.tipo === 'Modelo') {
                 objeto.show = true;
             }
         }
-    }else{
+    } else {
         objects = viewer.scene.primitives._primitives;
-        for (let objeto of objects){
-            if (objeto.tipo === 'Modelo'){
+        for (let objeto of objects) {
+            if (objeto.tipo === 'Modelo') {
                 objeto.show = false;
             }
         }
     }
-    if ($('#cb_nodos').hasClass('on')){
-        for (let nodo of nodes){
+    if ($('#cb_nodos').hasClass('on')) {
+        for (let nodo of nodes) {
             markers[nodo.pk].show = true;
         }
         changeNodes();
-    }else{
-        for (let nodo of nodes){
+    } else {
+        for (let nodo of nodes) {
             markers[nodo.pk].show = false;
         }
     }
-    if ($('#cb_caminos').hasClass('on')){
-        for (let edge of edges){
+    if ($('#cb_shadows').hasClass('on')) {
+        viewer.shadows = true;
+    } else {
+        viewer.shadows = false;
+    }
+    if ($('#cb_caminos').hasClass('on')) {
+        for (let edge of edges) {
             edgesC[edge.pk].show = true;
         }
-    }else{
-        for (let edge of edges){
+    } else {
+        for (let edge of edges) {
             edgesC[edge.pk].show = false;
         }
     }
-    if ($('#cb_corte').hasClass('on')){
+    if ($('#cb_corte').hasClass('on')) {
         $('#alturaCorte').off('input').on('input', function () {
-            console.log("Altura de corte: ", this.value);
             if (this.value === "") {
                 this.value = 0;
             }
@@ -530,24 +577,54 @@ function filtrarCzml(checkbox){
             for (let primitive of viewer.scene.primitives._primitives) {
                 if (primitive.tipo === 'Modelo') {
                     if (primitive.clippingPlanes) {
-                        console.log("plano" ,primitive.clippingPlanes);
-                        if (primitive.id === '3304544'){
-                            primitive.clippingPlanes.get(0).distance = alturaCorte+6.5;
-                        }else{
+                        console.log(primitive.clippingPlanes.get(0).distance);
+                        if (primitive.id_object === "3304544") {
+                            
+                            primitive.clippingPlanes.get(0).distance = alturaCorte + 6.5;
+                        } else {
                             primitive.clippingPlanes.get(0).distance = alturaCorte;
                         }
                         primitive._clippingPlanes._enabled = true;
                     }
                 }
             }
+            alturaCorte += 1.7;
+            viewer.entities.values.forEach(entity => {
+                let pos;
+                if (entity.position && Cesium.defined(entity.position.getValue)) {
+                    pos = entity.position.getValue(viewer.clock.currentTime);
+                } else if (entity.polyline && entity.polyline.positions && Cesium.defined(entity.polyline.positions.getValue)) {
+                    let positions = entity.polyline.positions.getValue(viewer.clock.currentTime);
+                    if (positions.length > 0) {
+                        const alturas = positions.map(p => Cesium.Cartographic.fromCartesian(p).height);
+                        const altMax = Math.max(...alturas);
+                        if (altMax > alturaCorte) {
+                            entity.show = false;
+                            return;
+                        }
+                    }
+                }
+            
+                if (pos) {
+                    const carto = Cesium.Cartographic.fromCartesian(pos);
+                    if (carto.height > alturaCorte) {
+                        entity.show = false;
+                        return;
+                    }
+                }
+            
+                entity.show = true;
+            });
         });
         $('#alturaCorte').trigger('input');
-    }else{
+    } else {
+        $('#alturaCorte').off('input');
         for (let primitive of viewer.scene.primitives._primitives) {
             if (primitive instanceof Cesium.Cesium3DTileset && primitive.clippingPlanes) {
                 primitive._clippingPlanes._enabled = false;
             }
         }
     }
-    
+
 }
+filtrarCzml()

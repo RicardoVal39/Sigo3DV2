@@ -3,12 +3,62 @@ input {
     border-bottom: solid 0.01vw var(--primary-color);
     background-color: var(--second-color);
     text-align: justify;
-    font-family: var(--font-third);
+    font-family: var(--font-second);
+}
+
+.success h2#modalTitle {
+    background-color: var(--success-color);
+}
+
+.info h2#modalTitle {
+    background-color: var(--info-color);
+}
+
+.warning h2#modalTitle {
+    background-color: var(--warning-color);
+}
+
+.error h2#modalTitle {
+    background-color: var(--error-color);
 }
 
 input:focus-visible {
     outline: none;
     border-bottom: var(--primary-color) solid 0.01vw;
+}
+
+button.floor-tab.active {
+    color: var(--second-color);
+}
+
+.btn_save,
+.btn_success {
+    background-color: var(--success-color);
+}
+
+.btn_warning,
+.btn_update {
+    background-color: var(--warning-color);
+}
+
+.btn_delete,
+.btn_error {
+    background-color: var(--error-color);
+}
+
+.btn_info {
+    background-color: var(--info-color);
+}
+
+.btn_save:hover,
+.btn_update:hover,
+.btn_delete:hover {
+    filter: brightness(6);
+}
+
+.btn_form:hover {
+    cursor: pointer;
+    filter: brightness(6);
 }
 
 .d-none {
@@ -18,26 +68,15 @@ input:focus-visible {
 .sigo-header {
     height: 5vh;
 }
-
+.search_result_item_node {
+    color: var(--second-color);
+    font-size: 1.7vh;
+    height: 2vh;
+}
 .bg-sigo {
     background-color: var(--second-color);
     color: var(--third-color);
     position: relative;
-}
-
-form {
-    display: flex;
-    margin-inline: 0vw;
-    flex-direction: column;
-    font-family: 'Lato';
-    font-weight: 500;
-    font-size: 1.3vw;
-    padding-bottom: 0.9vw;
-    max-height: 30vh;
-    overflow-y: auto;
-    margin-bottom: 2vw;
-    padding-inline: 1vw;
-    width: 85%;
 }
 
 form>p {
@@ -67,13 +106,46 @@ td>img {
     border: 1px solid #888;
     width: 45vw;
     height: 75vh;
-    overflow-y: auto;
 }
 
 @media screen and (min-aspect-ratio: 1/1) {
+    .room-item {
+        height: 16vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .cesium-viewer-fullscreenContainer {
+        width: 3vw !important;
+        height: 3vw !important;
+    }
+
+    form {
+        display: flex;
+        margin-inline: 0vw;
+        flex-direction: column;
+        font-family: 'Lato';
+        font-weight: 500;
+        font-size: 1.3vw;
+        padding-bottom: 0.9vw;
+        max-height: 51.5vh;
+        overflow-y: auto;
+        margin-bottom: 2vw;
+        padding-inline: 1vw;
+        width: 85%;
+        justify-content: flex-start;
+    }
+
+
+    .cesium-viewer-bottom {
+        left: 0.5vw !important;
+    }
+
     label {
         font-family: var(--font-second);
         color: var(--third-color);
+        font-size: 1.8vh;
     }
 
     select {
@@ -96,29 +168,32 @@ td>img {
     }
 
     div#modalBody {
-        height: 5vh;
+        height: 8vh;
         display: flex;
         align-items: center;
         margin-inline: 0.4vw;
         font-size: 1vw;
         font-weight: 300;
         font-family: 'Lato';
+        overflow-y: auto;
+        margin-block: 0.2vh;
     }
 
     div#cesium_admin {
         width: 94.5vw;
+        height: 100vh;
     }
 
-    div#modalInfo.success {
-        width: 20vw;
-        height: 10vh;
+    div#modalInfo {
+        width: 36vw;
+        height: 13vh;
         left: 1vw;
         top: 1vw;
         border-radius: 0.5vw;
         overflow: hidden;
     }
 
-    .success .modal-content {
+    .modal .modal-content {
         padding: 0;
         margin: 0;
         width: 100%;
@@ -127,8 +202,7 @@ td>img {
         background-color: var(--second-color);
     }
 
-    .success h2#modalTitle {
-        background-color: var(--primary-color);
+    .modal h2#modalTitle {
         padding: 0.4vw;
         margin: 0;
         height: max-content;
@@ -194,7 +268,7 @@ td>img {
         border-radius: 0 !important;
         background-color: transparent;
         border: none;
-        color: #3a3a3a;
+        color: var(--second-color);
         border-bottom: solid;
         font-family: 'Bebas Neue';
         font-size: 1.2vw;
@@ -202,39 +276,11 @@ td>img {
 
     button.floor-tab:hover {
         cursor: pointer;
-        color: #979797;
+        filter: brightness(0.5);
     }
 
     button.floor-tab.active {
-        color: var(--second-color);
-    }
-
-    .btn_save {
-        background-color: var(--success-color);
-    }
-
-    .btn_save:hover {
-        background: linear-gradient(180deg, rgba(58, 148, 58, 1) 0%, rgba(2, 185, 2, 1) 19%, rgba(0, 189, 0, 1) 81%, rgb(5 76 0) 100%);
-    }
-
-    .btn_update {
-        background: linear-gradient(180deg, rgba(254, 227, 184, 1) 0%, rgba(204, 124, 0, 1) 23%, rgba(204, 124, 0, 1) 81%, rgba(29, 17, 0, 1) 100%);
-    }
-
-    .btn_update:hover {
-        background: linear-gradient(180deg, rgba(255, 182, 67, 1) 0%, rgba(255, 162, 17, 1) 23%, rgba(255, 162, 17, 1) 81%, rgba(99, 58, 0, 1) 100%);
-    }
-
-    .btn_delete {
-        background: linear-gradient(180deg, rgba(207, 82, 97, 1) 0%, rgba(185, 2, 24, 1) 19%, rgba(185, 2, 24, 1) 81%, rgba(2, 0, 36, 1) 100%);
-    }
-
-    .btn_delete:hover {
-        background: linear-gradient(180deg, rgba(218, 31, 53, 1) 0%, rgba(224, 2, 28, 1) 19%, rgba(224, 2, 28, 1) 81%, rgba(95, 1, 33, 1) 100%);
-    }
-
-    .btn_form:hover {
-        cursor: pointer;
+        color: var(--primary-color);
     }
 
     .btn_form {
@@ -259,6 +305,10 @@ td>img {
         height: 100vh;
         width: 5.5vw;
     }
+    div#nodes_by_category {
+    height: 44vh;
+    overflow: auto;
+}
 
     .nav-item {
         height: 7vw;
@@ -281,7 +331,8 @@ td>img {
         align-items: center;
     }
 
-    .sidebar img {
+    .sidebar img,
+    .sidebar svg {
         width: 4vw;
         margin-bottom: 1vh;
     }
@@ -328,13 +379,13 @@ td>img {
     }
 
     #configuration_card .card-content {
-        height: 15vw;
+        height: 30vw;
         overflow-y: auto;
     }
 
     span.card-section-title {
         font-family: "Lato", serif;
-        font-size: 1.1vw;
+        font-size: 1.8vh;
     }
 
     .card-section {
@@ -473,44 +524,45 @@ td>img {
         margin-bottom: 1vw;
         width: 100%;
         overflow-y: auto;
-        overflow-x: hidden;
+        overflow-x: auto;
         border-top: solid var(--second-color) 0.1px;
     }
 
-    .scroll_black::-webkit-scrollbar {
+    .scroll-black::-webkit-scrollbar {
         width: 8px !important;
+        height: 1vh!important;
     }
 
-    .scroll_black::-webkit-scrollbar-track {
+    .scroll-black::-webkit-scrollbar-track {
         background: #f1f1f12b !important;
         border-radius: 4px !important;
     }
 
-    .scroll_black::-webkit-scrollbar-thumb {
+    .scroll-black::-webkit-scrollbar-thumb {
         background: #888 !important;
         border-radius: 4px !important;
     }
 
-    .scroll_black::-webkit-scrollbar-thumb:hover {
+    .scroll-black::-webkit-scrollbar-thumb:hover {
         background: #ffffffbf !important;
     }
 
-    .scroll_white::-webkit-scrollbar {
+    .scroll-white::-webkit-scrollbar {
         width: 8px !important;
         margin-left: 1vw !important;
     }
 
-    .scroll_white::-webkit-scrollbar-track {
+    .scroll-white::-webkit-scrollbar-track {
         background: #4c4c4c40 !important;
         border-radius: 4px !important;
     }
 
-    .scroll_white::-webkit-scrollbar-thumb {
+    .scroll-white::-webkit-scrollbar-thumb {
         background: #565555d1 !important;
         border-radius: 4px !important;
     }
 
-    .scroll_white::-webkit-scrollbar-thumb:hover {
+    .scroll-white::-webkit-scrollbar-thumb:hover {
         background: #000000ba !important;
     }
 
@@ -521,8 +573,8 @@ td>img {
         font-weight: 300;
         display: block;
         width: 8vw;
-        height: 1vw;
-        font-size: 1vw;
+        height: 2vw;
+        font-size: 0.9vw;
         margin: 0.7vw 0;
     }
 
@@ -586,7 +638,7 @@ td>img {
         position: absolute;
         width: max-content;
         height: max-content;
-        bottom: 2vw;
+        top: 7.5vw;
         left: 1vw;
         display: flex;
         flex-direction: row;
@@ -620,9 +672,90 @@ td>img {
         margin: 0.5vw;
         font-weight: 500;
     }
+    #nodes_by_category h3 {
+        width: 39vh!important;
+        text-align: center;
+    }
 }
 
 @media screen and (max-aspect-ratio: 1/1) {
+    .room-item {
+        height: 16vh;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .cesium-viewer-fullscreenContainer {
+        width: 7vw !important;
+        height: 7vw !important;
+        top: 0 !important;
+    }
+
+    .option span {
+        width: 57%;
+    }
+
+    form {
+        display: flex;
+        margin-inline: 0vw;
+        flex-direction: column;
+        font-family: 'Lato';
+        font-weight: 500;
+        font-size: 2.3vw;
+        padding-bottom: 0.9vw;
+        max-height: 50.5vh;
+        overflow-y: auto;
+        margin-bottom: 2vw;
+        padding-inline: 2vw;
+        width: 85%;
+        justify-content: flex-start;
+    }
+
+    div#modalBody {
+        height: 8vh;
+        display: flex;
+        align-items: center;
+        margin-inline: 0.4vw;
+        font-size: 1vw;
+        font-weight: 300;
+        font-family: 'Lato';
+        overflow-y: auto;
+        margin-block: 0.2vh;
+    }
+
+    div#modalInfo {
+        width: 76vw;
+        height: 13vh;
+        left: 1vw;
+        top: 1vw;
+        border-radius: 1.5vw;
+        overflow: hidden;
+    }
+
+    .modal .modal-content {
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+        background-color: var(--second-color);
+    }
+
+    .modal h2#modalTitle {
+        padding: 0.4vw 1.4vw;
+        margin: 0;
+        height: max-content;
+        font-size: 3vh;
+        font-weight: 200;
+        font-family: 'Bebas Neue';
+        color: var(--third-color);
+    }
+
+    .cesium-viewer-bottom {
+        left: 0.5vw !important;
+    }
+
     label {
         font-family: var(--font-second);
         color: var(--third-color);
@@ -648,17 +781,18 @@ td>img {
     }
 
     div#modalBody {
-        height: 5vh;
+        height: 7vh;
         display: flex;
         align-items: center;
-        margin-inline: 0.4vw;
-        font-size: 1vw;
+        margin-inline: 1.4vw;
+        font-size: 2.2vh;
         font-weight: 300;
         font-family: 'Lato';
     }
 
     div#cesium_admin {
         height: 92vh;
+        width: 100vw;
     }
 
     div#modalInfo.success {
@@ -759,38 +893,6 @@ td>img {
         color: #979797;
     }
 
-    button.floor-tab.active {
-        color: var(--second-color);
-    }
-
-    .btn_save {
-        background-color: var(--success-color);
-    }
-
-    .btn_save:hover {
-        background: linear-gradient(180deg, rgba(58, 148, 58, 1) 0%, rgba(2, 185, 2, 1) 19%, rgba(0, 189, 0, 1) 81%, rgb(5 76 0) 100%);
-    }
-
-    .btn_update {
-        background: linear-gradient(180deg, rgba(254, 227, 184, 1) 0%, rgba(204, 124, 0, 1) 23%, rgba(204, 124, 0, 1) 81%, rgba(29, 17, 0, 1) 100%);
-    }
-
-    .btn_update:hover {
-        background: linear-gradient(180deg, rgba(255, 182, 67, 1) 0%, rgba(255, 162, 17, 1) 23%, rgba(255, 162, 17, 1) 81%, rgba(99, 58, 0, 1) 100%);
-    }
-
-    .btn_delete {
-        background: linear-gradient(180deg, rgba(207, 82, 97, 1) 0%, rgba(185, 2, 24, 1) 19%, rgba(185, 2, 24, 1) 81%, rgba(2, 0, 36, 1) 100%);
-    }
-
-    .btn_delete:hover {
-        background: linear-gradient(180deg, rgba(218, 31, 53, 1) 0%, rgba(224, 2, 28, 1) 19%, rgba(224, 2, 28, 1) 81%, rgba(95, 1, 33, 1) 100%);
-    }
-
-    .btn_form:hover {
-        cursor: pointer;
-    }
-
     .btn_form {
         border: none;
         border-radius: 0.2vh;
@@ -802,7 +904,7 @@ td>img {
     }
 
     .option .icon {
-        width: 1.5vw;
+        width: 3.5vw;
     }
 
     header.sidebar {
@@ -838,13 +940,10 @@ td>img {
         align-items: center;
     }
 
-    .sidebar img, .sidebar svg {
+    .sidebar img,
+    .sidebar svg {
         width: 50%;
         margin-bottom: 1vh;
-    }
-
-    div#configuration {
-        %;
     }
 
     .nav-item.active {
@@ -865,16 +964,16 @@ td>img {
     #configuration_card {
         position: absolute;
         z-index: 20;
-        bottom: 15vh;
+        bottom: 9vh;
         right: 1vw;
         background-color: var(--second-color);
-        width: 21vw;
-        border-radius: 1vw;
+        width: 36vw;
+        border-radius: 1.5vw;
         height: max-content;
     }
 
     span.card-title {
-        font-size: 1.5vw;
+        font-size: 2.5vw;
         text-align: center;
         width: 100%;
         display: block;
@@ -889,7 +988,8 @@ td>img {
 
     span.card-section-title {
         font-family: "Lato", serif;
-        font-size: 1.7vw;
+        font-size: 2.7vw;
+        font-weight: 700;
     }
 
     .card-section {
@@ -902,17 +1002,17 @@ td>img {
     }
 
     .option {
-        height: 2.5vw;
+        height: 7vw;
         display: flex;
         align-items: center;
         justify-content: space-between;
         font-family: 'Lato';
-        font-size: 1.3vw;
+        font-size: 2.3vw;
     }
 
     .checkbox {
-        width: 3vw;
-        height: 1.5vw;
+        width: 8vw;
+        height: 4vw;
         border-radius: 3vw;
         position: relative;
         cursor: pointer;
@@ -928,13 +1028,13 @@ td>img {
 
     .checkbox:before {
         content: '';
-        width: 1.3vw;
-        height: 1.3vw;
+        width: 3.5vw;
+        height: 3.5vw;
         border-radius: 2vw;
         display: block;
         background-color: var(--second-color);
         position: absolute;
-        top: 0.1vw;
+        top: 0.3vw;
         transform: var(--transition);
     }
 
@@ -1024,7 +1124,7 @@ td>img {
     }
 
     div#search_results_div {
-        height: 30.5vh;
+        height: 53.5vh;
         margin-bottom: 1vw;
         width: 100%;
         overflow-y: auto;
@@ -1032,40 +1132,40 @@ td>img {
         border-top: solid var(--second-color) 0.1px;
     }
 
-    .scroll_black::-webkit-scrollbar {
+    .scroll-black::-webkit-scrollbar {
         width: 8px !important;
     }
 
-    .scroll_black::-webkit-scrollbar-track {
+    .scroll-black::-webkit-scrollbar-track {
         background: #f1f1f12b !important;
         border-radius: 4px !important;
     }
 
-    .scroll_black::-webkit-scrollbar-thumb {
+    .scroll-black::-webkit-scrollbar-thumb {
         background: #888 !important;
         border-radius: 4px !important;
     }
 
-    .scroll_black::-webkit-scrollbar-thumb:hover {
+    .scroll-black::-webkit-scrollbar-thumb:hover {
         background: #ffffffbf !important;
     }
 
-    .scroll_white::-webkit-scrollbar {
+    .scroll-white::-webkit-scrollbar {
         width: 8px !important;
         margin-left: 1vw !important;
     }
 
-    .scroll_white::-webkit-scrollbar-track {
+    .scroll-white::-webkit-scrollbar-track {
         background: #4c4c4c40 !important;
         border-radius: 4px !important;
     }
 
-    .scroll_white::-webkit-scrollbar-thumb {
+    .scroll-white::-webkit-scrollbar-thumb {
         background: #565555d1 !important;
         border-radius: 4px !important;
     }
 
-    .scroll_white::-webkit-scrollbar-thumb:hover {
+    .scroll-white::-webkit-scrollbar-thumb:hover {
         background: #000000ba !important;
     }
 
@@ -1092,7 +1192,7 @@ td>img {
     }
 
     .search_result_item {
-        height: 14vw;
+        height: 18vw;
         width: 100%;
         display: flex;
         align-items: center;
@@ -1115,7 +1215,7 @@ td>img {
         justify-content: center;
         color: var(--second-color);
         font-family: 'Lato';
-        font-size: 1.3vw;
+        font-size: 1.8vw;
     }
 
     #search_results>h3,
@@ -1129,7 +1229,7 @@ td>img {
 
     div#search_results,
     #info_object {
-        width: 34vw;
+        width: 45vw;
         background-color: #383636db;
         border-radius: 0 1vw 1vw 0;
         margin-left: -1vw;
@@ -1138,15 +1238,15 @@ td>img {
         flex-direction: row;
         flex-wrap: wrap;
         align-items: center;
-        height: 100%;
-        max-height: 40vh;
+        height: max-content;
+        max-height: 57.5vh;
     }
 
     div#tools_container {
         position: absolute;
         width: max-content;
         height: max-content;
-        bottom: 15vh;
+        bottom: 28vh;
         left: 1vw;
         display: flex;
         flex-direction: row;
@@ -1161,14 +1261,14 @@ td>img {
     }
 
     div#form_basic {
-        width: 19vw;
+        width: 51vw;
         height: max-content;
         position: relative;
         display: flex;
         background-color: var(--second-color);
         flex-wrap: wrap;
         justify-content: flex-start;
-        border-radius: 0.5vw;
+        border-radius: 1.5vw;
         flex-direction: column;
         align-items: center;
         bottom: 0;
@@ -1176,7 +1276,7 @@ td>img {
 
     div#form_basic h3 {
         font-family: "Bebas Neue", serif;
-        font-size: 2.3vw;
+        font-size: 4.3vw;
         margin: 0.5vw;
         font-weight: 500;
     }

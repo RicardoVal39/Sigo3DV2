@@ -3,10 +3,14 @@
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+
     <meta
       name="description"
-      content="Explora UnillanGO, el sistema de información geoespacial de la Universidad de los Llanos que te ayuda a navegar por el campus, encontrar paradas de bus y mucho más."
+      content="Explora {{configurate_interface.name}}, el sistema de información geoespacial de la {{configurate_interface.name_institution}} que te ayuda a navegar por el campus, encontrar paradas de bus y mucho más."
     />
     <meta
       name="keywords"
@@ -15,23 +19,29 @@
     <meta name="robots" content="index, follow" />
     <meta
       property="og:title"
-      content="UnillanGO - Mapa Interactivo de la Universidad de los Llanos"
+      content="{{configurate_interface.name}} - Mapa Interactivo de la {{configurate_interface.name_institution}}"
     />
     <meta
       property="og:description"
-      content="Encuentra tu camino en el campus con UnillanGO. Explora rutas, paradas de bus y más con nuestro sistema geoespacial."
+      content="Encuentra tu camino en el campus con {{configurate_interface.name}}. Explora rutas, paradas de bus y más con nuestro sistema geoespacial."
     />
     <meta name="twitter:card" content="summary_large_image" />
     <meta
       name="twitter:title"
-      content="UnillanGO - Mapa Interactivo de la Universidad de los Llanos"
+      content="{{configurate_interface.name}} - Mapa Interactivo de la {{configurate_interface.name_institution}}"
     />
     <meta
       name="twitter:description"
-      content="Accede a información geoespacial del campus, rutas y paradas de bus con UnillanGO."
+      content="Accede a información geoespacial del campus, rutas y paradas de bus con {{configurate_interface.name}}."
     />
+
     <!-- <meta name="twitter:image" content="URL_de_la_imagen_destacada"> -->
-    <title>{% block title %}UnillanGO{% endblock %}</title>
+    <title>{% block title %}{{configurate_interface.name}}{% endblock %}</title>
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ configurate_interface.logo.url }}"
+    />
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
@@ -41,22 +51,22 @@
       href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.6.0/css/fontawesome.min.css"
     />
     <style>
-        :root {
-            --success-color: {{configurate_interface.success_color}};
-            --error-color: {{configurate_interface.error_color}};
-            --warning-color: {{configurate_interface.warning_color}};
-            --info-color: {{configurate_interface.info_color}};
+      :root {
+          --success-color: {{configurate_interface.success_color}};
+          --error-color: {{configurate_interface.error_color}};
+          --warning-color: {{configurate_interface.warning_color}};
+          --info-color: {{configurate_interface.info_color}};
 
-            --primary-color: {{configurate_interface.primary_color}};
-            --second-color: {{configurate_interface.secondary_color}};
-            --third-color: {{configurate_interface.third_color}};
-            --third-color-transparent: {{configurate_interface.third_color}}db;
-            --transition: 1500ms;
-            
-            --font-primary: '{{configurate_interface.font_primary}}', sans-serif;
-            --font-secondary: '{{configurate_interface.font_secondary}}', sans-serif;
-            --font-third: 'Bebas Neue', sans-serif;
-        }
+          --primary-color: {{configurate_interface.primary_color}};
+          --second-color: {{configurate_interface.secondary_color}};
+          --third-color: {{configurate_interface.third_color}};
+          --third-color-transparent: {{configurate_interface.third_color}}db;
+          --transition: 1500ms;
+
+          --font-primary: '{{configurate_interface.font_primary}}', sans-serif;
+          --font-secondary: '{{configurate_interface.font_secondary}}', sans-serif;
+          --font-third: 'Bebas Neue', sans-serif;
+      }
     </style>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -68,18 +78,123 @@
   </head>
   <body class="bg-sigo" data-sandcastle-bucket="bucket-requirejs.html">
     <header class="sidebar">
-      <div class="nav-item-logo">
-        <img
-          src="{% static 'logos/Unillanos-white.png' %}"
-          alt="logo-objetos"
-        />
-      </div>
+      <a href="/admin" rel="noopener noreferrer">
+        <div class="nav-item-logo">
+          <img src="{{configurate_interface.logo.url}}" alt="logo-objetos" />
+        </div>
+      </a>
       <div class="nav-item" onclick="consultaDatos('objetos_czml',this)">
-        <img src="{% static 'logos/objeto.png' %}" alt="logo-objetos" />
+        <svg
+          id="eIRAM2eVUOl1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 300 300"
+          shape-rendering="geometricPrecision"
+          text-rendering="geometricPrecision"
+          project-id="c729d44f1dd04b088ba0f0816f3cdacf"
+          export-id="53888b416d8f4ac3a249d5b661d449eb"
+          cached="false"
+        >
+          <g transform="matrix(4.060344 0 0 4.384642-383.129917-235.661741)">
+            <path
+              d="M150,105.76831l-17.1489,7.22819c-.25438-.60278-.85094-1.02585-1.54631-1.02585s-1.29193.42307-1.54631,1.02585l-17.1489-7.22819v-17.3656c.92652,0,1.67762-.7511,1.67762-1.67762c0-.26579-.06181-.51714-.17184-.74046l17.18943-8.45282l17.18943,8.45282c-.11003.22332-.17184.47468-.17184.74046c0,.92652.7511,1.67762,1.67762,1.67762v17.3656Z"
+              fill="none"
+              stroke="{{configurate_interface.secondary_color}}"
+              stroke-width="0.6"
+            />
+            <path
+              d="M131.30479,95.59004l-17.17902-8.14599c.10351-.2179.16143.25728.16143-.00001l17.01759,8.146l17.017589-8.146c0,.25729.057921-.2179.161431,0l-17.17902,8.146Z"
+              fill="none"
+              stroke="{{configurate_interface.secondary_color}}"
+              stroke-width="0.6"
+            />
+            <path
+              d="M150,105.76831l15.046829,7.879953"
+              transform="translate(.000001 0.000001)"
+              fill="none"
+              stroke="{{configurate_interface.secondary_color}}"
+              stroke-width="0.6"
+            />
+            <path
+              d="M112.609576,105.768309l-15.05308,7.879955"
+              transform="translate(0 0.000001)"
+              fill="none"
+              stroke="{{configurate_interface.secondary_color}}"
+              stroke-width="0.6"
+            />
+            <path
+              d="M131.304788,80.139716v-16.99"
+              transform="translate(0-2.607902)"
+              fill="none"
+              stroke="{{configurate_interface.secondary_color}}"
+              stroke-width="0.6"
+            />
+            <path
+              d="M131.304788,80.139716v-16.99"
+              transform="matrix(1 0 0 0.979287 0.000002 33.422459)"
+              fill="none"
+              stroke="{{configurate_interface.secondary_color}}"
+              stroke-width="0.6"
+            />
+            <ellipse
+              rx="3.76327"
+              ry="3.76327"
+              transform="matrix(.445787 0 0 0.445787 112.60958 86.725086)"
+              fill="none"
+              stroke="{{configurate_interface.primary_color}}"
+              stroke-width="1.5"
+            />
+            <ellipse
+              rx="3.76327"
+              ry="3.76327"
+              transform="matrix(.445788 0 0 0.445788 150 86.72509)"
+              fill="none"
+              stroke="{{configurate_interface.primary_color}}"
+              stroke-width="1.5"
+            />
+            <ellipse
+              rx="3.76327"
+              ry="3.76327"
+              transform="matrix(.45831 0 0 0.458309 131.30479 113.648264)"
+              fill="none"
+              stroke="{{configurate_interface.primary_color}}"
+              stroke-width="1.5"
+            />
+          </g>
+        </svg>
+
         Objetos
       </div>
       <div class="nav-item" onclick="consultaDatos('nodos',this)">
-        <img src="{% static 'logos/nodo.png' %}" alt="logo-nodos" />
+        <svg
+          id="eIHlqtoZpR81"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 300 300"
+          shape-rendering="geometricPrecision"
+          text-rendering="geometricPrecision"
+          project-id="c729d44f1dd04b088ba0f0816f3cdacf"
+          export-id="5891f11dcbc64075b118b40f5c4097cf"
+          cached="false"
+        >
+          <ellipse
+            rx="33.156284"
+            ry="33.156284"
+            transform="matrix(.989538 0 0 0.989538 150 109.775561)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="6"
+            stroke-miterlimit="6"
+          />
+          <path
+            d="M149.999998,280.712259c5.052862,0,89.115781-120.444755,90.190864-163.868543s-38.293941-88.277098-90.190862-88.277098-89.391958,37.609951-89.163577,88.277098s84.110713,163.868543,89.163575,163.868543Z"
+            transform="translate(.000002 0)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="6"
+          />
+        </svg>
+
         Nodos
       </div>
       <div class="nav-item" onclick="consultaDatos('caminos',this)">
@@ -102,7 +217,7 @@
               y2="-51.176471"
               transform="matrix(1.091854-.015704 0.016133 1.121635 150.000001 150.000001)"
               fill="none"
-              stroke="#dfdfdf"
+              stroke="{{configurate_interface.secondary_color}}"
               stroke-width="6"
             />
             <ellipse
@@ -110,7 +225,7 @@
               ry="34.941177"
               transform="translate(231.882354 66)"
               fill="none"
-              stroke="#a90000"
+              stroke="{{configurate_interface.primary_color}}"
               stroke-width="8"
             />
             <ellipse
@@ -118,7 +233,7 @@
               ry="34.941177"
               transform="translate(68.117649 234.705883)"
               fill="none"
-              stroke="#a90000"
+              stroke="{{configurate_interface.primary_color}}"
               stroke-width="8"
             />
           </g>
@@ -126,7 +241,93 @@
         Caminos
       </div>
       <div class="nav-item" onclick="consultaDatos('rutas',this)">
-        <img src="{% static 'logos/ruta.png' %}" alt="logo-rutas" />
+        <svg
+          id="eYhwZoHNjXR1"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 300 300"
+          shape-rendering="geometricPrecision"
+          text-rendering="geometricPrecision"
+          project-id="c729d44f1dd04b088ba0f0816f3cdacf"
+          export-id="2e5085dcec004a38b34c3dffab18cd24"
+          cached="false"
+        >
+          <line
+            x1="-76.190206"
+            y1="19.856791"
+            x2="73.685284"
+            y2="-17.998437"
+            transform="translate(184.663829 89.280653)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="3"
+          />
+          <line
+            x1="61.037977"
+            y1="54.260274"
+            x2="-51.224462"
+            y2="-22.667902"
+            transform="translate(156.606457 148.32773)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="3"
+          />
+          <line
+            x1="-91.285935"
+            y1="33.525004"
+            x2="69.720655"
+            y2="-23.950836"
+            transform="translate(145.454599 241.531483)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="3"
+          />
+          <g transform="translate(-96.347048 124.933364)">
+            <ellipse
+              rx="33.156284"
+              ry="33.156284"
+              transform="matrix(.159693 0 0 0.159693 150.515712 115.206559)"
+              fill="none"
+              stroke="{{configurate_interface.primary_color}}"
+              stroke-width="20"
+              stroke-miterlimit="6"
+            />
+            <path
+              d="M149.999998,280.712259c5.052862,0,89.115781-120.444755,90.190864-163.868543s-38.293941-88.277098-90.190862-88.277098-89.391958,37.609951-89.163577,88.277098s84.110713,163.868543,89.163575,163.868543Z"
+              transform="matrix(.203086 0 0 0.203086 119.946431 93.114393)"
+              fill="none"
+              stroke="{{configurate_interface.primary_color}}"
+              stroke-width="20"
+            />
+          </g>
+          <ellipse
+            rx="16.473583"
+            ry="16.473583"
+            transform="translate(229.704795 212.698426)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+            stroke-miterlimit="6"
+          />
+          <ellipse
+            rx="18.900277"
+            ry="18.900277"
+            transform="translate(91.283438 114.925795)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+          />
+          <path
+            d="M243.600211,98.707977h19.959275-10.126921v-50.355204h-29.191422l10.954456,10.954455L224.43126,70.071567h29.001305v28.63641h-9.832354Z"
+            transform="translate(5.463652-27.425761)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="4"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+
         Rutas
       </div>
       <div
@@ -134,10 +335,88 @@
         id="configuration"
         onclick="mostrar('configuration_card',this)"
       >
-        <img
-          src="{% static 'logos/configuracion.png' %}"
-          alt="logo-configuracion"
-        />
+        <svg
+          id="eGHyqJ0ZE581"
+          xmlns="http://www.w3.org/2000/svg"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+          viewBox="0 0 300 300"
+          shape-rendering="geometricPrecision"
+          text-rendering="geometricPrecision"
+          project-id="c729d44f1dd04b088ba0f0816f3cdacf"
+          export-id="1301067ccd3b49d585d938551b86b803"
+          cached="false"
+        >
+          <path
+            d="M29.87293,55.22348h158.42327c-3.29867,3.91038-5.28669,8.96245-5.28669,14.47885c0,5.52596,1.99491,10.58597,5.30384,14.49916h-158.44042c-8.00206,0-14.48901-6.48695-14.48901-14.48901s6.48695-14.48901,14.48901-14.48901v.00001Zm239.48044,0c.2562-.01348.51416-.02031.77371-.02031c8.00206,0,14.48901,6.48695,14.48901,14.48901s-6.48695,14.48901-14.48901,14.48901v.02031h-47.48517c3.30893-3.91319,5.30384-8.97321,5.30384-14.49917c0-5.5164-1.98802-10.56847-5.28669-14.47886l46.69431.00001Z"
+            transform="translate(-.000007-4.430709)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="3"
+          />
+          <ellipse
+            rx="22.468123"
+            ry="22.468123"
+            transform="translate(205.47762 65.27163)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+          />
+          <ellipse
+            rx="11.554118"
+            ry="11.554118"
+            transform="matrix(.98698 0 0 0.98698 205.47762 65.27163)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+          />
+          <path
+            d="M29.87293,129.15811h61.48505c-3.29867,3.91038-5.28669,8.96245-5.28669,14.47886c0,5.52596,1.99491,10.58597,5.30384,14.49916h-61.5022c-8.00206,0-14.48901-6.48695-14.48901-14.48901s6.48695-14.48901,14.48901-14.48901Zm239.48044,0c.2562-.01348.51416-.02031.77371-.02031c8.00206,0,14.48901,6.48695,14.48901,14.48901s-6.48695,14.48901-14.48901,14.48901v.02031h-144.42339c3.30893-3.91319,5.30384-8.97321,5.30384-14.49917c0-5.5164-1.98802-10.56847-5.28669-14.47885h143.63253Z"
+            transform="translate(-.000002 7.249175)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="3"
+          />
+          <ellipse
+            rx="22.468123"
+            ry="22.468123"
+            transform="translate(108.968019 150.88614)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+          />
+          <ellipse
+            rx="11.554118"
+            ry="11.554118"
+            transform="matrix(.98698 0 0 0.98698 108.968019 150.88614)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+          />
+          <path
+            d="M29.87293,215.81881h135.95515c-3.29867,3.91038-5.28669,8.96245-5.28669,14.47886c0,5.52596,1.99491,10.58597,5.30384,14.49916h-135.9723c-8.00206,0-14.48901-6.48695-14.48901-14.48901s6.48695-14.48901,14.48901-14.48901Zm239.48044,0c.2562-.01348.51416-.02031.77371-.02031c8.00206,0,14.48901,6.48695,14.48901,14.48901s-6.48695,14.48901-14.48901,14.48901v.02031h-69.95329c3.30893-3.91319,5.30384-8.97321,5.30384-14.49916c0-5.5164-1.98802-10.56847-5.28669-14.47886h69.16243Z"
+            transform="translate(-.000002 4.430706)"
+            fill="none"
+            stroke="{{configurate_interface.secondary_color}}"
+            stroke-width="3"
+          />
+          <ellipse
+            rx="22.468123"
+            ry="22.468123"
+            transform="translate(183.009502 234.728371)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+          />
+          <ellipse
+            rx="11.554118"
+            ry="11.554118"
+            transform="matrix(.98698 0 0 0.98698 183.009502 234.728371)"
+            fill="none"
+            stroke="{{configurate_interface.primary_color}}"
+            stroke-width="3"
+          />
+        </svg>
+
         Configuración
       </div>
     </header>
@@ -156,12 +435,11 @@
       </div>
       <div class="card d-none" id="configuration_card">
         <span class="card-title">Configuración</span>
-        <div class="card-content">
+        <div class="card-content scroll-white">
           <div class="card-section">
-            <span class="card-section-title">Plano de Corte</span>
             <div class="card-section-content">
               <div class="option">
-                <span>Nodos</span>
+                <span>Plano de Corte</span>
                 <div
                   id="cb_corte"
                   class="checkbox off"
@@ -212,7 +490,7 @@
                   max="10"
                 />
               </div>
-              <div class="option">
+              <div class="option d-none">
                 <span>Animación</span>
                 <input
                   type="number"
@@ -254,6 +532,14 @@
                   onclick="filtrarCzml(this)"
                 ></div>
               </div>
+              <div class="option">
+                <span>Sombras</span>
+                <div
+                  id="cb_shadows"
+                  class="checkbox off"
+                  onclick="filtrarCzml(this)"
+                ></div>
+              </div>
             </div>
           </div>
           {%if categories_nodes%}
@@ -289,7 +575,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
-    <script src="https://cdn.datatables.net/2.1.5/js/dataTables.js"></script>
     <!-- Cesium -->
     <script src="{% static 'Cesium/Build/Cesium/Cesium.js' %}"></script>
     <script
@@ -307,9 +592,12 @@
       let markers = {};
       let markers_edges = {};
       let edgesC = {};
-
+      let primary_color = "{{configurate_interface.primary_color}}";
+      let second_color = "{{configurate_interface.secondary_color}}";
+      let third_color = "{{configurate_interface.third_color}}";
       let context_act = "";
       let clickMarkerTemp = null;
+      let path = null;
       let models = [];
       let nodes = [];
       let nodos_camino = [];
@@ -327,7 +615,7 @@
                   'value': '',
                   'value_prev': '',
                   'required': true,},
-              'Categoría': {
+              'Categoria_nodo': {
                   'type': 'select',
                   'label': 'Categoría del nodo',
                   'value': '',
@@ -385,9 +673,9 @@
                   'value_prev': '',
                   'required': true,
               },
-              'Tipo': {
+              'Categoria': {
                   'type': 'select',
-                  'label': 'Tipo de objeto',
+                  'label': 'Categoría del objeto',
                   'value': '',
                   'value_prev': '',
                   'required': true,
@@ -469,6 +757,7 @@
               'Actualizar_Rutas': {
                   'type': 'button',
                   'label': 'Actualizar rutas',
+                  'class': 'btn_warning',
               },
               'Nodo_Inicial': {
                   'type': 'select',
@@ -487,11 +776,13 @@
               },
               'Iniciar_Ruta_Normal': {
                   'type': 'button',
-                  'label': 'Ruta normal',
+                  'label': 'Ruta Normal',
+                  'class': 'btn_error',
               },
               'Iniciar_Ruta_Dron': {
                   'type': 'button',
                   'label': 'Ruta Dron',
+                  'class': 'btn_error',
               },
           },
       };
@@ -507,6 +798,7 @@
               'id_object': '{{model.id_object}}',
               'name': '{{model.name}}',
               'type': '{{model.type_object}}',
+              'category_object': '{{model.category_object.pk}}',
               'is_activated': '{{model.is_activated}}',
               'location' : {
                   'pk': {{model.location.pk|default:0}},

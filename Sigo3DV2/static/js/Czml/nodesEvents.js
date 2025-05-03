@@ -55,83 +55,16 @@ function changeNodes() {
         }
     });
 }
-
+changeNodes();
 function updateNodo(id_nodo, name, newUrl, category, latitude, longitude, altitude) {
     let nodoActual = (markers[id_nodo]) ? markers[id_nodo] : clickMarkerTemp;
     nodoActual.position = Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude);
     nodoActual.billboard.image = newUrl;
     nodoActual.category = category;
-    nodoActual.label.text._value = (category == 21) ? "" : name;
-    edges.forEach(edge => {
-        if (edge.id_start_node == id_nodo || edge.id_end_node == id_nodo) {
-            let nodes_ed = [];
-            if (edge.id_start_node == id_nodo) {
-                nodes.forEach(node => {
-                    if (node.pk == edge.id_end_node) {
-                        nodes_ed.push({
-                            'pk': edge.id_start_node,
-                            'latitude': parseFloat(latitude.replace(",", ".")),
-                            'longitude': parseFloat(longitude.replace(",", ".")),
-                            'altitude': parseFloat(altitude.replace(",", "."))
-                        });
-                        nodes_ed.push({
-                            'pk': edge.id_end_node,
-                            'latitude': parseFloat(node.latitude.replace(",", ".")),
-                            'longitude': parseFloat(node.longitude.replace(",", ".")),
-                            'altitude': parseFloat(node.altitude.replace(",", "."))
-                        });
-                    }
-                });
-            } else {
-                if (edge.id_end_node == id_nodo) {
-                    nodes.forEach(node => {
-                        if (node.pk == edge.id_start_node) {
-                            nodes_ed.push({
-                                'pk': edge.id_start_node,
-                                'latitude': parseFloat(node.latitude.replace(",", ".")),
-                                'longitude': parseFloat(node.longitude.replace(",", ".")),
-                                'altitude': parseFloat(node.altitude.replace(",", "."))
-                            });
-                            nodes_ed.push({
-                                'pk': edge.id_end_node,
-                                'latitude': parseFloat(latitude.replace(",", ".")),
-                                'longitude': parseFloat(longitude.replace(",", ".")),
-                                'altitude': parseFloat(altitude.replace(",", "."))
-                            });
-                        }
-                    });
-                }
-            }
-
-            let start = Cesium.Cartesian3.fromDegrees(nodes_ed[0].longitude, nodes_ed[0].latitude, nodes_ed[0].altitude);
-            let end = Cesium.Cartesian3.fromDegrees(nodes_ed[1].longitude, nodes_ed[1].latitude, nodes_ed[1].altitude);
-
-            let d = Cesium.Cartesian3.distance(start, end);
-            $.ajax({
-                type: "PUT",
-                url: urls['caminos'],
-                data: JSON.stringify({
-                    'Punto_Inicial': nodes_ed[0].pk,
-                    'Punto_Final': nodes_ed[1].pk,
-                    'Distancia': d.toFixed(2),
-                }),
-                success: function (response) {
-                    info('Respuesta del servidor', response.message, 'success', 'caminos');
-                },
-                error: function (xhr, status, error) {
-                    info('Error en la solicitud', error, 'error', 'caminos');
-                }
-            });
-            edgesC[edge.pk].polyline.positions = Cesium.Cartesian3.fromDegreesArrayHeights([
-                nodes_ed[0].longitude, nodes_ed[0].latitude, nodes_ed[0].altitude,
-                nodes_ed[1].longitude, nodes_ed[1].latitude, nodes_ed[1].altitude
-            ]),
-                edgesC[edge.pk].distancia = d.toFixed(2);
-            markers_edges[edge.pk].label.text._value = `${d.toFixed(2)} m`;
-        }
-    });
+    nodoActual.label.text._value = (category == 21) ? "" : wrapText(name, 25);
+    updateEdge(id_nodo, latitude, longitude, altitude);
+    
 }
-
 
 function createMarker(id_node, longitude, latitude, altitude, name, url, category) {
     longitude = parseFloat(longitude.replace(",", "."));
@@ -139,7 +72,9 @@ function createMarker(id_node, longitude, latitude, altitude, name, url, categor
     altitude = parseFloat(altitude.replace(",", "."));
     label = (category == 'Camino') ? "" : name;
     width_node = (category == 'Camino') ? 15 : 20;
-    distance = (category == 'Camino') ? 200 : 500;
+    width_node = (category == 'Bloque' || category == 'Edificio'|| category == 'Entrada'|| category == 'Bienestar') ? 30 : width_node;
+    distance = (category == 'Camino') ? 50 : 100;
+    distance = (category == 'Bloque'|| category == 'Edificio'|| category == 'Entrada'|| category == 'Bienestar') ? 300 : distance;
     let marker = viewer.entities.add({
         pk: id_node,
         name: name,
@@ -154,16 +89,16 @@ function createMarker(id_node, longitude, latitude, altitude, name, url, categor
 
         },
         label: {
-            text: `${label}`,
-            font: "15pt sans-serif", // Fuente moderna y más grande
-            fillColor: Cesium.Color.WHITE, // Texto blanco
-            outlineColor: Cesium.Color.BLACK, // Borde negro para mejor contraste
-            outlineWidth: 0, // Borde más grueso
+            text: `${wrapText(label, 25)}`,
+            font: "15pt sans-serif", 
+            fillColor: Cesium.Color.WHITE, 
+            outlineColor: Cesium.Color.BLACK, 
+            outlineWidth: 0, 
             style: Cesium.LabelStyle.FILL_AND_OUTLINE,
-            showBackground: true,  // Agregar fondo semitransparente
-            backgroundColor: new Cesium.Color(0, 0, 0, 0.2), // Fondo negro con transparencia
+            showBackground: true,  
+            backgroundColor: new Cesium.Color(0, 0, 0, 0.2), 
             verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
-            pixelOffset: new Cesium.Cartesian2(0, -40), // Ajustar mejor el texto
+            pixelOffset: new Cesium.Cartesian2(0, -40), 
             distanceDisplayCondition: new Cesium.DistanceDisplayCondition(0.0, distance)
         }
     });
@@ -183,6 +118,7 @@ for (let nodo of nodes) {
 function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es creción de nodo
     btn_save = $('#id_save');
     if (valor) {
+        info('Nodos','Seleccionaste un nodo ya creado, modifica lo que veas necesario y dale en actualizar.','info',6000);
         id_node_location = valor;
         btn_save.text('Actualizar');
         btn_save.removeClass('btn_save');
@@ -217,12 +153,12 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
                 let longitude = parseFloat(node.longitude.replace(",", "."));
                 let altitude = parseFloat(node.altitude.replace(",", "."));
                 $('#id_Nombre').val(node.name);
-                $('#id_Categoría').val(node.category_pk);
+                $('#id_Categoria_nodo').val(node.category_pk);
                 $('#id_Latitud').val(latitude);
                 $('#id_Longitud').val(longitude);
                 $('#id_Altitud').val(altitude);
                 $('#form_basic').off('input').on('input', function () {
-                    let selectedCategory = $('#id_Categoría').val();  // Obtener la categoría seleccionada
+                    let selectedCategory = $('#id_Categoria_nodo').val();  // Obtener la categoría seleccionada
                     let name = $('#id_Nombre').val();
                     latitude = $('#id_Latitud').val();
                     longitude = $('#id_Longitud').val();
@@ -242,6 +178,7 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
             }
         });
     } else {
+        info('Nodos','Haz creado un nuevo nodo temporal, por favor selecciona la categoria, nombre del nodo y modifica la latitud, longitud y altitud si es necesario y luego dale en guardar.','info',6000);
         $('#id_delete').hide();
         btn_save.removeClass('btn_update');
         btn_save.addClass('btn_save');
@@ -254,7 +191,7 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
         let latitude = Cesium.Math.toDegrees(cartographic.latitude);
         let altitude = cartographic.height+1.5;
         $('#id_Nombre').val('Temp');
-        $('#id_Categoría').val(21);
+        $('#id_Categoria_nodo').val(21);
         $('#id_Latitud').val(latitude);
         $('#id_Longitud').val(longitude);
         $('#id_Altitud').val(altitude);
@@ -272,6 +209,8 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
                 fillColor: Cesium.Color.WHITE,
                 outlineColor: Cesium.Color.BLACK,
                 outlineWidth: 3,
+                maxwidth: 200,
+                pixelOffset: new Cesium.Cartesian2(0, -40), // Ajustar mejor el texto
                 style: Cesium.LabelStyle.FILL_AND_OUTLINE,
                 showBackground: true,
                 backgroundColor: new Cesium.Color(0, 0, 0, 0.2),
@@ -281,7 +220,7 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
             }
         });
         $('#form_basic').off('input').on('input', function () {
-            let selectedCategory = $('#id_Categoría').val();  // Obtener la categoría seleccionada
+            let selectedCategory = $('#id_Categoria_nodo').val();  // Obtener la categoría seleccionada
             let name = $('#id_Nombre').val();
             latitude = $('#id_Latitud').val();
             longitude = $('#id_Longitud').val();
@@ -299,7 +238,7 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
             id_node_location = id;
             enviarForm('post');
             let name = $('#id_Nombre').val();
-            let selectedCategory = $('#id_Categoría').val();  // Obtener la categoría seleccionada
+            let selectedCategory = $('#id_Categoria_nodo').val();  // Obtener la categoría seleccionada
             let category = categories.find(cat => cat.pk == selectedCategory);
             latitude = $('#id_Latitud').val();
             longitude = $('#id_Longitud').val();
@@ -308,7 +247,6 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
                 viewer.entities.remove(clickMarkerTemp);
             }
             let cartesian = Cesium.Cartesian3.fromDegrees(longitude, latitude, altitude);
-            edicionNodo(id, cartesian)
             createMarker(id, longitude, latitude, altitude, name, category.icon, category.name)
             nodes.push({
                 'pk': id,
@@ -320,6 +258,7 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
                 'latitude': latitude,
                 'altitude': altitude,
             });
+            edicionNodo(id, cartesian);
             Object.keys(categories).forEach(category => {
                 if (categories[category].pk == selectedCategory) {
                     categories[category].count = categories[category].count + 1;
@@ -330,7 +269,15 @@ function edicionNodo(valor, cartesian) {//true si es cambio de nodo, false si es
     }
 
 }
-
+function consultarNodo(pk,longitud, latitud, altitud) {
+    latitud = parseFloat(latitud);
+    longitud = parseFloat(longitud);
+    altitud = parseFloat(altitud);
+    id_node_location = pk;
+    zoomToCoordinates(latitud, longitud, altitud);
+    let cartesian = Cesium.Cartesian3.fromDegrees(latitud, longitud, altitud);
+    edicionNodo(pk, cartesian);
+}
 // Evento de clic para seleccionar un nodo
 function DetectarNodos() {
     KeyboardControl(true, 'nodos');

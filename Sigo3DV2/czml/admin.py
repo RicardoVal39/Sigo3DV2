@@ -7,9 +7,10 @@ from .models import *
 
 class NodeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name', 'latitude', 'longitude', 'altitude', 'category_node']
-    search_fields = ['name', ]
+    search_fields = ['name', 'category_node' ]
     list_filter = ['category_node']
-    list_editable= ['name', 'category_node']
+    list_editable= ['name', 'latitude', 'longitude', 'altitude', 'category_node']
+    list_per_page = 30
     fieldsets = (
         (None, {
             'fields': ('name', 'category_node')}),
@@ -26,13 +27,17 @@ class NodeAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['name', 'context']
-    search_fields = ['name']
-    list_filter = ['name']
+    list_display = ['pk','name', 'context','icon']
+    
+    search_fields = ['name', 'context']
+    list_filter = ['context']
+    list_editable = ['name','context','icon']
+    list_per_page = 30
     
 class EdgeAdmin(admin.ModelAdmin):
     list_display = ['pk','start_node', 'end_node', 'distance']
     search_fields = ['start_node', 'end_node']
+    list_per_page = 30
 
 class RoomStackedInline(admin.StackedInline):
     model = Room
@@ -43,15 +48,15 @@ class RoomStackedInline(admin.StackedInline):
             kwargs["queryset"] = Category.objects.filter(context="salones") 
 
         if db_field.name == "location":
-            kwargs["queryset"] = Node.objects.all().order_by('category_node','name')  # Filtrar por contexto "nodo"      
+            kwargs["queryset"] = Node.objects.all().exclude(category_node__pk=1).exclude(category_node__name__in=["Camino", "Conjunto"]).order_by('name')  # Filtrar por contexto "nodo"      
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class CzmlObjectAdmin(admin.ModelAdmin):
-    list_display = ['id_object','name', 'name_presentation', 'category_object','is_activated', 'description']
-    search_fields = ['name']
-    list_filter = ['is_activated']
-    list_editable = ['name_presentation', 'is_activated']
-    list_per_page = 10
+    list_display = ['id_object','name', 'name_presentation', 'category_object','is_activated']
+    search_fields = ['name', 'name_presentation', 'category_object']
+    list_filter = ['is_activated', 'category_object']
+    list_editable = ['name', 'name_presentation', 'category_object','is_activated']
+    list_per_page = 30
     fieldsets = (
         (None, {
             'fields': ('id_object', 'name', 'name_presentation', 'category_object', 'is_activated', 'description')
@@ -70,6 +75,7 @@ class CzmlObjectAdmin(admin.ModelAdmin):
             kwargs["queryset"] = Category.objects.filter(context="objetos_czml").order_by('name')  # Filtrar por contexto "nodo"
         if db_field.name == "location":
             kwargs["queryset"] = Node.objects.filter(category_node__context="objetos_czml").order_by('category_node','name')
+            
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -90,6 +96,7 @@ class RouteAdmin(admin.ModelAdmin):
     list_display = ['id', 'start_node', 'end_node', 'total_distance']
     search_fields = ['start_node', 'end_node']
     list_filter = ['start_node', 'end_node']
+    list_per_page = 30
     
 admin.site.register(CzmlObject, CzmlObjectAdmin)
 admin.site.register(Edge, EdgeAdmin)

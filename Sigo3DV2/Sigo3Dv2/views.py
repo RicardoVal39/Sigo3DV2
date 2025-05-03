@@ -22,4 +22,4 @@ def sigo_3d(request):
         "categories" : array_Categories,
         "configurate_interface": configurate_interface,
         }
-    return render(request, 'UnillanGO.html', context)
+    return render(request, 'Unillanos3D.html', context)

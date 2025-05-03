@@ -105,6 +105,18 @@ function zoomToCoordinates(latitude, longitude,altitude) {
         duration: 2 
     });
 }
+function zoomToCoordinatesRoom(latitude, longitude,altitude,orientation) {
+    const destination = Cesium.Cartesian3.fromDegrees((longitude), (latitude), (altitude));
+    viewer.camera.flyTo({
+        destination: destination,
+        orientation: {
+            heading: Cesium.Math.toRadians(parseFloat(orientation)),
+            pitch: Cesium.Math.toRadians(-60.0),
+            roll: 0.0
+        },
+        duration: 2 
+    });
+}
 function rastrearUbicacion(mostrar) {
   /* funcion que realiza el rastreo de la persona, es decir sigue la ubicacion de la persona mientras recorre el campus
   permitiendo le ver desde el dispositivo los edificios, salones o lugares que lo rodean y la informacion de estos 

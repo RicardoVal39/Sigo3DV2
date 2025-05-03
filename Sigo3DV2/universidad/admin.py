@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import *
 
 class InterfazAdmin(admin.ModelAdmin):
-    list_display = ['name','name_institution','is_activated']
-    list_editable = ['name_institution','is_activated']
+    list_display = ['pk', 'name','name_institution','is_activated']
+    list_editable = ['name','name_institution','is_activated']
 
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ['id', 'category_schedule', 'start_time', 'end_time', 'day_of_week']
@@ -26,9 +26,10 @@ class ResourceAdmin(admin.ModelAdmin):
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 class RoomAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'object_father', 'type_room']
+    list_display = ['id', 'name', 'image_room', 'object_father', 'type_room']
     search_fields = ['name']
     list_filter = ['object_father', 'type_room']
+    list_editable = ['name', 'image_room', 'object_father', 'type_room']
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == "type_room":
@@ -53,4 +54,3 @@ admin.site.register(Faculty, FacultyAdmin)
 admin.site.register(Career, CareerAdmin)
 admin.site.register(Course)
 admin.site.register(Course_User)
-
